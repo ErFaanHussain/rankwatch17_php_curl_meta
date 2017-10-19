@@ -13,6 +13,7 @@
     <div class="navbar-brand mx-auto">URL Details</div>
   </nav>
 </div>
+<!-- container for the url input field and buttons -->
 <div class="container">
 	<div class="col-md-9 mx-auto mt-5" >
         <!-- Form to take input parameters from the user -->
@@ -21,7 +22,7 @@
             <label class="col-form-label" for="name">Enter a URL</label>
             <input type="text" class="form-control" name="url" value="" placeholder="http://example.com">
           </div>
-          <!-- This div used to alert user of errors or success message -->
+          <!-- This div is used to alert user of errors or success message -->
           <div class="text-center">
             <button type="submit" class="btn btn-primary" name="send">Get Details</button>
             <button type="reset" class="btn btn-danger ml-md-5">Cancel</button>
@@ -41,10 +42,10 @@ if(isset($_POST["url"])){
     $ch = curl_init(); //initializing cURL and setting operations
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_URL, $url); //supply url to cURL
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 
-    $data = curl_exec($ch);
+    $data = curl_exec($ch); //execute the cURL
     if (!curl_errno($ch)) { //check whether cURL has some error
       $details = curl_getinfo($ch); //get cURL request details, an associative array is returned if specific cURL
                                       //CONSTANT isn't supplied
@@ -62,16 +63,16 @@ if(isset($_POST["url"])){
       $metas = $doc->getElementsByTagName('meta'); //metas contains meta tags
       for ($i = 0; $i < $metas->length; $i++)
         {
-          $meta = $metas->item($i); //access the items in the metas array
+          $meta = $metas->item($i); //access the items in the metas array and check each for description and keyword
           if($meta->getAttribute('name') == 'description' || $meta->getAttribute('name') == 'Description'){
-            $description = $meta->getAttribute('content');
+            $description = $meta->getAttribute('content'); //store description, if found
           }
           if($meta->getAttribute('name') == 'keywords' || $meta->getAttribute('name') == 'Keywords'){
-            $keywords = $meta->getAttribute('content');
+            $keywords = $meta->getAttribute('content'); //store keywords, if found
           }
         }
       echo "<br/><br/>Title: $title ". '<br/><br/>';
-      //some websites doesn't have meta tags like google.co.in
+      //some websites doesn't provide meta tags like http://google.co.in
       if(!empty($description)){
         echo "Description: $description". '<br/><br/>';
       }else{
